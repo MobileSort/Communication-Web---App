@@ -1,0 +1,15 @@
+Phone.Connector.Faker/bin
+Phone.Connector.Faker/obj
+/shelf/
+/workspace.xml
+# Rider ignored files
+/.idea.Phone.Connector.Faker.iml
+/contentModel.xml
+/modules.xml
+/projectSettingsUpdater.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+.idea
