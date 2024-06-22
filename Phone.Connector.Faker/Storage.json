@@ -24,14 +24,16 @@
             {
               "path": "/storage/emulated/0/Android/data/myFile.txt",
               "type": "file",
-              "size_bytes": 100000
+              "size_bytes": 100000,
+              "files": null
             }
           ]
         },
         {
           "path": "/storage/emulated/0/Android/obb",
           "type": "directory",
-          "size_bytes": 200000000
+          "size_bytes": 200000000,
+          "files": null
         }
       ]
     },
@@ -43,7 +45,8 @@
         {
           "path": "/storage/emulated/0/DCIM/Camera",
           "type": "directory",
-          "size_bytes": 300000000
+          "size_bytes": 300000000,
+          "files": null
         }
       ]
     },
@@ -55,7 +58,8 @@
         {
           "path": "/storage/emulated/0/Download/music.mp3",
           "type": "file",
-          "size_bytes": 10000000
+          "size_bytes": 10000000,
+          "files": null
         }
       ]
     },
@@ -67,7 +71,8 @@
         {
           "path": "/storage/emulated/0/Music/album.mp3",
           "type": "file",
-          "size_bytes": 5000000
+          "size_bytes": 5000000,
+          "files": null
         }
       ]
     }

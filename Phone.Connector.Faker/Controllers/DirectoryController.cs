@@ -10,18 +10,49 @@ public class DirectoryController : Controller
     [HttpPost("/ListDirectory")]
     public IActionResult ListDirectory([FromBody] ListDirectoryRequest request )
     {
-        StorageReader storageReader = new("Storage.json");
-        AndroidDirectory? androidRoot = storageReader.ReadStorage();
-        if (androidRoot == null)
+        StorageReader storageReader;
+        try
+        {
+            storageReader = new StorageReader("Storage.json");
+        }
+        catch
         {
             return NotFound();
         }
-
-        var foundElement = storageReader.SearchSubDirectory(androidRoot.Directories, request.path);
+        
+        if (request.path == "/")
+        {
+            return Ok(storageReader.readDirectory);
+        }
+        var foundElement = storageReader.SearchSubDirectory(storageReader.readDirectory.Directories, request.path);
         if (foundElement == null)
         {
             return NotFound();
         }
         return Ok(foundElement);
+    }
+
+    [HttpPost("/MoveItem")]
+    public IActionResult MoveItem([FromBody] MoveItemRequest request)
+    {
+        StorageReader storageReader;
+        try
+        {
+            storageReader = new StorageReader("Storage.json");
+        }
+        catch (Exception e)
+        {
+            return NotFound(e);
+        }
+        var success = storageReader.MoveItem(request.pathToMoveFrom, request.pathToMoveTo);
+        if (success)
+        {
+            storageReader.WriteChanges();
+            return Ok();
+        }
+
+        return StatusCode(500);
+
+        
     }
 }
