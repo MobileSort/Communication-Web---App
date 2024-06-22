@@ -50,6 +50,16 @@ public class StorageReader
         return null;
     }
 
+    public bool RemoveItem(string pathToRemove)
+    {
+        var elementToMove = SearchSubDirectory(readDirectory.Directories, pathToRemove);
+        if (elementToMove == null)
+        {
+            return false;
+        }
+        return DeleteDirectory(elementToMove);
+    }
+
     public bool MoveItem(string toMove, string detination)
     {
         

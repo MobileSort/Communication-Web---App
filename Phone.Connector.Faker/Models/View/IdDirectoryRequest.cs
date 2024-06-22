@@ -1,6 +1,6 @@
 namespace Phone.Connector.Faker.Models.View;
 
-public class ListDirectoryRequest
+public class IdDirectoryRequest
 {
     public string path { get; set; }
 }

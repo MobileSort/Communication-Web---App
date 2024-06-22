@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Phone.Connector.Faker.Models.View;
 using Phone.Connector.Faker.Models.ViewModel;
@@ -7,13 +8,14 @@ namespace Phone.Connector.Faker.Controllers;
 
 public class DirectoryController : Controller
 {
+    private const string StoragePath = "Storage.json";
     [HttpPost("/ListDirectory")]
-    public IActionResult ListDirectory([FromBody] ListDirectoryRequest request )
+    public IActionResult ListDirectory([FromBody] IdDirectoryRequest request )
     {
         StorageReader storageReader;
         try
         {
-            storageReader = new StorageReader("Storage.json");
+            storageReader = new StorageReader(StoragePath);
         }
         catch
         {
@@ -32,27 +34,46 @@ public class DirectoryController : Controller
         return Ok(foundElement);
     }
 
+    [HttpDelete("RemoveItem")]
+    public IActionResult RemoveItem([FromBody] IdDirectoryRequest request)
+    {
+        StorageReader storageReader;
+        try
+        {
+            storageReader = new StorageReader(StoragePath);
+        }
+        catch
+        {
+            return NotFound();
+        }
+
+        var success = storageReader.RemoveItem(request.path);
+        if (!success)
+        {
+           return StatusCode(500);
+        }
+        storageReader.WriteChanges();
+        return Ok();
+    }
+
     [HttpPost("/MoveItem")]
     public IActionResult MoveItem([FromBody] MoveItemRequest request)
     {
         StorageReader storageReader;
         try
         {
-            storageReader = new StorageReader("Storage.json");
+            storageReader = new StorageReader(StoragePath);
         }
         catch (Exception e)
         {
             return NotFound(e);
         }
         var success = storageReader.MoveItem(request.pathToMoveFrom, request.pathToMoveTo);
-        if (success)
+        if (!success)
         {
-            storageReader.WriteChanges();
-            return Ok();
+            return StatusCode(500);
         }
-
-        return StatusCode(500);
-
-        
+        storageReader.WriteChanges();
+        return Ok();
     }
 }
