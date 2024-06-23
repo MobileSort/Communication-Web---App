@@ -9,15 +9,13 @@ namespace Phone.Connector.Faker.Controllers;
 [Route("api/[controller]")]
 public class DirectoryController : Controller
 {
-    private const string StoragePath = "Storage.json";
-
     [HttpPost("ListDirectory")]
     public IActionResult ListDirectory([FromBody] IdDirectoryRequest request)
     {
         StorageReader storageReader;
         try
         {
-            storageReader = new StorageReader(StoragePath);
+            storageReader = new StorageReader(Constants.StoragePath);
         }
         catch
         {
@@ -44,7 +42,7 @@ public class DirectoryController : Controller
         StorageReader storageReader;
         try
         {
-            storageReader = new StorageReader(StoragePath);
+            storageReader = new StorageReader(Constants.StoragePath);
         }
         catch
         {
@@ -73,7 +71,7 @@ public class DirectoryController : Controller
         StorageReader storageReader;
         try
         {
-            storageReader = new StorageReader(StoragePath);
+            storageReader = new StorageReader(Constants.StoragePath);
         }
         catch
         {
@@ -89,7 +87,7 @@ public class DirectoryController : Controller
         StorageReader storageReader;
         try
         {
-            storageReader = new StorageReader(StoragePath);
+            storageReader = new StorageReader(Constants.StoragePath);
         }
         catch
         {
@@ -112,7 +110,7 @@ public class DirectoryController : Controller
         StorageReader storageReader;
         try
         {
-            storageReader = new StorageReader(StoragePath);
+            storageReader = new StorageReader(Constants.StoragePath);
         }
         catch (Exception e)
         {
