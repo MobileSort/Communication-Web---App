@@ -5,6 +5,6 @@ public class AddFileRequest
 {
     [JsonPropertyName("path")] 
     public string Path { get; set; }
-    [JsonPropertyName("size_bytes")] 
-    public const long SizeBytes = 0;
+
+    [JsonPropertyName("size_bytes")] public long SizeBytes { get; set; }
 }

@@ -5,6 +5,7 @@ using Phone.Connector.Faker.Models.ViewModel;
 using Phone.Connector.Faker.Utils;
 
 namespace Phone.Connector.Faker.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
 public class DirectoryController : Controller
@@ -78,6 +79,14 @@ public class DirectoryController : Controller
             return NotFound();
         }
 
+        var file = new DirectoryElement(request.Path, "file", request.SizeBytes, []);
+        var success = storageReader.AddFile(file);
+        if (!success)
+        {
+            return StatusCode(500);
+        }
+
+        storageReader.WriteChanges();
         return Ok();
     }
 

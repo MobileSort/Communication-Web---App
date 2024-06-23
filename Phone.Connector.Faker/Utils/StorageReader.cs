@@ -88,7 +88,16 @@ public class StorageReader
 
     public bool AddFile(DirectoryElement element)
     {
-        //add directory first then add the file
+        var lastElement = element.Path.Split("/").Last();
+        var lastDir = element.Path.Replace("/"+lastElement,"");
+        DirectoryElement directoriesToAdd = new(lastDir, "directory", 0, []);
+        AddDirectory(directoriesToAdd);
+        var addedDir = SearchSubDirectory(readDirectory.Directories, directoriesToAdd.Path);
+        if (addedDir == null)
+        {
+            return false;
+        }
+        addedDir.Files.Add(element);
         return true;
     }
 
