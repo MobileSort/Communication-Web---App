@@ -5,12 +5,13 @@ using Phone.Connector.Faker.Models.ViewModel;
 using Phone.Connector.Faker.Utils;
 
 namespace Phone.Connector.Faker.Controllers;
-
+[ApiController]
+[Route("api/[controller]")]
 public class DirectoryController : Controller
 {
     private const string StoragePath = "Storage.json";
 
-    [HttpPost("/ListDirectory")]
+    [HttpPost("ListDirectory")]
     public IActionResult ListDirectory([FromBody] IdDirectoryRequest request)
     {
         StorageReader storageReader;
@@ -105,7 +106,7 @@ public class DirectoryController : Controller
         return Ok();
     }
 
-    [HttpPost("/MoveItem")]
+    [HttpPost("MoveItem")]
     public IActionResult MoveItem([FromBody] MoveItemRequest request)
     {
         StorageReader storageReader;

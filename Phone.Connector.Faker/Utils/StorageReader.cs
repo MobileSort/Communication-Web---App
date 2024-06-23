@@ -74,7 +74,7 @@ public class StorageReader
         {
             var pathWORoot = directoryToAdd.Path.Replace(readDirectory.Path, "");
             var currentToAddDirPath = readDirectory.Path+"/"+pathWORoot.Split("/")[1];
-            readDirectory.Directories.Add(new(currentToAddDirPath,"directory",0,null));
+            readDirectory.Directories.Add(new(currentToAddDirPath,"directory",0,[]));
             startDirectory = FindRootDirectory(currentToAddDirPath);
         }
 
@@ -97,9 +97,19 @@ public class StorageReader
         
         var elementToMove = SearchSubDirectory(readDirectory.Directories, toMove);
         var folderToMoveTo = SearchSubDirectory(readDirectory.Directories, destination);
-        if (elementToMove == null || folderToMoveTo == null)
+        if (elementToMove == null)
         {
             return false;
+        }
+        if (folderToMoveTo == null)
+        {
+            AddDirectory(new DirectoryElement(destination, "directory", 0, []));
+            folderToMoveTo = SearchSubDirectory(readDirectory.Directories, destination);
+
+            if (folderToMoveTo == null)
+            {
+                throw new Exception("Problem while creating the folder");
+            }
         }
         if (folderToMoveTo.Type == "file")
         {
