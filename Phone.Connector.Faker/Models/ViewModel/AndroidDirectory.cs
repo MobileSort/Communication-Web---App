@@ -37,6 +37,13 @@ public class DirectoryElement
 
     [JsonPropertyName("size_bytes")] public long SizeBytes { get; set; }
 
-    [JsonPropertyName("files")]
-    public List<DirectoryElement> Files { get; set; }
+    [JsonPropertyName("files")] public List<DirectoryElement> Files { get; set; }
+
+    public DirectoryElement(string path, string type, long sizeBytes, List<DirectoryElement> files)
+    {
+        Path = path;
+        Type = type;
+        SizeBytes = sizeBytes;
+        Files = files;
+    }
 }

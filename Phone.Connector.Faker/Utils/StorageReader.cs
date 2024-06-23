@@ -60,11 +60,43 @@ public class StorageReader
         return DeleteDirectory(elementToMove);
     }
 
-    public bool MoveItem(string toMove, string detination)
+    public bool AddDirectory(DirectoryElement directoryToAdd)
+    {
+        //Create validation to clean the possible file at the end of the path
+        var alreadlyExists = SearchSubDirectory(readDirectory.Directories, directoryToAdd.Path);
+        if (alreadlyExists != null)
+        {
+            return true;
+        }
+        DirectoryElement? startDirectory = FindRootDirectory(directoryToAdd.Path);
+        
+        if (startDirectory == null)
+        {
+            var pathWORoot = directoryToAdd.Path.Replace(readDirectory.Path, "");
+            var currentToAddDirPath = readDirectory.Path+"/"+pathWORoot.Split("/")[1];
+            readDirectory.Directories.Add(new(currentToAddDirPath,"directory",0,null));
+            startDirectory = FindRootDirectory(currentToAddDirPath);
+        }
+
+        if (startDirectory == null)
+        {
+            throw new Exception("There was a problem on creating the folder");
+        }
+        var leaf = FindLeaf(startDirectory, directoryToAdd.Path);
+        return AddDirectoryRecursively(leaf, directoryToAdd);
+    }
+
+    public bool AddFile(DirectoryElement element)
+    {
+        //add directory first then add the file
+        return true;
+    }
+
+    public bool MoveItem(string toMove, string destination)
     {
         
         var elementToMove = SearchSubDirectory(readDirectory.Directories, toMove);
-        var folderToMoveTo = SearchSubDirectory(readDirectory.Directories, detination);
+        var folderToMoveTo = SearchSubDirectory(readDirectory.Directories, destination);
         if (elementToMove == null || folderToMoveTo == null)
         {
             return false;
@@ -109,6 +141,37 @@ public class StorageReader
         parentDirectory.Files.Remove(file);
         return true;
     }
+
+    private bool AddDirectoryRecursively(DirectoryElement toBeAddedTo, DirectoryElement directoryToAdd)
+    {
+        if (toBeAddedTo.Path == directoryToAdd.Path)
+        {
+            return true;
+        }
+        if(toBeAddedTo.Files.Contains(directoryToAdd))
+        {
+            return true;
+        }
+        var pathWORoot = directoryToAdd.Path.Replace(toBeAddedTo.Path, "");
+        var currentToAddDirPath = toBeAddedTo.Path+"/"+pathWORoot.Split("/")[1];
+        toBeAddedTo.Files.Add(new(currentToAddDirPath,"directory",0,[]));
+        var leaf = FindLeaf(toBeAddedTo, directoryToAdd.Path);
+        return AddDirectoryRecursively(leaf, directoryToAdd);
+    }
+
+    private DirectoryElement? FindRootDirectory(string pathToFind)
+    {
+        List<DirectoryElement> filedDescending = readDirectory.Directories.OrderByDescending(file => file.Path.Length).ToList();
+        foreach (var file in filedDescending)
+        {
+            if (pathToFind.StartsWith(file.Path))
+            {
+                return file;
+            }
+        }
+
+        return null;
+    }
     
     private DirectoryElement? FindParentDirectory(DirectoryElement file)
     {
@@ -147,5 +210,24 @@ public class StorageReader
         }
 
         return null;
+    }
+
+    private DirectoryElement FindLeaf(DirectoryElement searchTarget, string pathToFind)
+    {
+        if (searchTarget.Files == null || searchTarget.Files.Count == 0)
+        {
+            return searchTarget;
+        }
+
+        List<DirectoryElement> filedDescending = searchTarget.Files.OrderByDescending(file => file.Path.Length).ToList();
+        foreach (var file in filedDescending)
+        {
+            if (pathToFind.StartsWith(file.Path))
+            {
+                return FindLeaf(file, pathToFind);
+            }
+        }
+
+        return searchTarget;  
     }
 }
