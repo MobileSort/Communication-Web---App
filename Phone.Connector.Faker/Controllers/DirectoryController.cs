@@ -13,10 +13,10 @@ public class DirectoryController : Controller
     [HttpPost("ListDirectory")]
     public IActionResult ListDirectory([FromBody] IdDirectoryRequest request)
     {
-        StorageReader storageReader;
+        DirectoryService directoryService;
         try
         {
-            storageReader = new StorageReader(Constants.StoragePath);
+            directoryService = new DirectoryService(Constants.StoragePath);
         }
         catch
         {
@@ -25,10 +25,10 @@ public class DirectoryController : Controller
 
         if (request.path == "/")
         {
-            return Ok(storageReader.readDirectory);
+            return Ok(directoryService.readDirectory);
         }
 
-        var foundElement = storageReader.SearchSubDirectory(storageReader.readDirectory.Directories, request.path);
+        var foundElement = directoryService.SearchSubDirectory(directoryService.readDirectory.Directories, request.path);
         if (foundElement == null)
         {
             return NotFound();
@@ -40,10 +40,10 @@ public class DirectoryController : Controller
     [HttpPost("AddDirectory")]
     public IActionResult AddDirectory([FromBody] IdDirectoryRequest request)
     {
-        StorageReader storageReader;
+        DirectoryService directoryService;
         try
         {
-            storageReader = new StorageReader(Constants.StoragePath);
+            directoryService = new DirectoryService(Constants.StoragePath);
         }
         catch
         {
@@ -56,23 +56,23 @@ public class DirectoryController : Controller
             0,
             []
         );
-        var success = storageReader.AddDirectory(dir);
+        var success = directoryService.AddDirectory(dir);
         if (!success)
         {
             return StatusCode(500);
         }
 
-        storageReader.WriteChanges();
+        directoryService.WriteChanges();
         return Ok();
     }
 
     [HttpPost("AddFile")]
     public IActionResult AddFile([FromBody] AddFileRequest request)
     {
-        StorageReader storageReader;
+        DirectoryService directoryService;
         try
         {
-            storageReader = new StorageReader(Constants.StoragePath);
+            directoryService = new DirectoryService(Constants.StoragePath);
         }
         catch
         {
@@ -80,59 +80,59 @@ public class DirectoryController : Controller
         }
 
         var file = new DirectoryElement(request.Path, "file", request.SizeBytes, []);
-        var success = storageReader.AddFile(file);
+        var success = directoryService.AddFile(file);
         if (!success)
         {
             return StatusCode(500);
         }
 
-        storageReader.WriteChanges();
+        directoryService.WriteChanges();
         return Ok();
     }
 
     [HttpDelete("RemoveItem")]
     public IActionResult RemoveItem([FromBody] IdDirectoryRequest request)
     {
-        StorageReader storageReader;
+        DirectoryService directoryService;
         try
         {
-            storageReader = new StorageReader(Constants.StoragePath);
+            directoryService = new DirectoryService(Constants.StoragePath);
         }
         catch
         {
             return NotFound();
         }
 
-        var success = storageReader.RemoveItem(request.path);
+        var success = directoryService.RemoveItem(request.path);
         if (!success)
         {
             return StatusCode(500);
         }
 
-        storageReader.WriteChanges();
+        directoryService.WriteChanges();
         return Ok();
     }
 
     [HttpPost("MoveItem")]
     public IActionResult MoveItem([FromBody] MoveItemRequest request)
     {
-        StorageReader storageReader;
+        DirectoryService directoryService;
         try
         {
-            storageReader = new StorageReader(Constants.StoragePath);
+            directoryService = new DirectoryService(Constants.StoragePath);
         }
         catch (Exception e)
         {
             return NotFound(e);
         }
 
-        var success = storageReader.MoveItem(request.pathToMoveFrom, request.pathToMoveTo);
+        var success = directoryService.MoveItem(request.pathToMoveFrom, request.pathToMoveTo);
         if (!success)
         {
             return StatusCode(500);
         }
 
-        storageReader.WriteChanges();
+        directoryService.WriteChanges();
         return Ok();
     }
 }

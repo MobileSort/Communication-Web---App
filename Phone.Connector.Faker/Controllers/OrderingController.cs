@@ -10,17 +10,18 @@ public class OrderingController: Controller
     [HttpPost("RevertChanges")]
     public bool RevertChages()
     {
-        using StreamReader r = new(Constants.BackupStoragePath);
+        //throw this to the service of ordering
+        using StreamReader readerStorage = new(Constants.BackupStoragePath);
         
-        string json = r.ReadToEnd();
+        string json = readerStorage.ReadToEnd();
         if (json == null)
         {
             throw new Exception("Not Found");
         }
         try
         {
-            using var streamWriter = new StreamWriter(Constants.StoragePath, false);
-            streamWriter.Write(json);
+            using var writerStorage = new StreamWriter(Constants.StoragePath, false);
+            writerStorage.Write(json);
         }
         catch
         {

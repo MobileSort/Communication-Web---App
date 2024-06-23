@@ -3,12 +3,12 @@ using Phone.Connector.Faker.Models.ViewModel;
 
 namespace Phone.Connector.Faker.Utils;
 
-public class StorageReader
+public class DirectoryService
 {
     public string storagePath;
     public AndroidDirectory readDirectory;
     
-    public StorageReader(string path)
+    public DirectoryService(string path)
     {
         storagePath = path;
         using StreamReader r = new(storagePath);
