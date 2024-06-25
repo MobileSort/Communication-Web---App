@@ -25,7 +25,7 @@ public class DirectoryController : Controller
 
         if (request.path == "/")
         {
-            return Ok(directoryService.readDirectory);
+            return Ok(new DirectoryElement("/", "directory", 0, directoryService.readDirectory.Directories));
         }
 
         var foundElement = directoryService.SearchSubDirectory(directoryService.readDirectory.Directories, request.path);
