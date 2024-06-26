@@ -29,28 +29,24 @@
       "valueTag": "Value 4"
     },
     {
-      "idTag": 5,
-      "name": "Text files",
-      "color": "#FFFFF",
-      "typeTag": 11,
-      "valueTag": ".txt"
-    },
-    {
       "idTag": 6,
       "name": "Text files",
       "color": "#FFFFF",
       "typeTag": 14,
       "valueTag": ".txt"
+    },
+    {
+      "idTag": 7,
+      "name": "Doc",
+      "color": "#FFFFF",
+      "typeTag": 14,
+      "valueTag": ".doc"
     }
   ],
   "typeTags": [
     {
       "idTypeTag": 10,
       "description": "Type 1"
-    },
-    {
-      "idTypeTag": 11,
-      "description": "Type 2"
     },
     {
       "idTypeTag": 12,
@@ -63,6 +59,14 @@
     {
       "idTypeTag": 14,
       "description": "Extention"
+    },
+    {
+      "idTypeTag": 15,
+      "description": "Name"
+    },
+    {
+      "idTypeTag": 16,
+      "description": "Another"
     }
   ],
   "orderings": [

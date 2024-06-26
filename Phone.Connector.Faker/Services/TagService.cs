@@ -46,6 +46,16 @@ public class TagService
         InternalConfigSingle.internalConfigRead.Tags.Add(tagToAdd);
         return tagToAdd.IdTag;
     }
+
+    public bool RemoveTag(int id)
+    {
+        var foundTag = GetTagById(id);
+        if (foundTag == null)
+        {
+            return false;
+        }
+        return InternalConfigSingle.internalConfigRead.Tags.Remove(foundTag);
+    }
     public List<TypeTag> ListTypeTags()
     {
         return InternalConfigSingle.internalConfigRead.TypeTags;
@@ -79,5 +89,14 @@ public class TagService
     public bool WriteChanges()
     {
         return InternalConfigSingle.WriteChanges();
+    }
+    public bool RemoveTypeTag(int id)
+    {
+        var foundTag = GetTypeTagById(id);
+        if (foundTag == null)
+        {
+            return false;
+        }
+        return InternalConfigSingle.internalConfigRead.TypeTags.Remove(foundTag);
     }
 }

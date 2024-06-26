@@ -26,7 +26,7 @@ public class TagController : Controller
     }
 
     [HttpPost("GetTagById")]
-    public IActionResult GetTagById(IdTagRequest request)
+    public IActionResult GetTagById([FromBody] IdTagRequest request)
     {
         TagService tagService;
         try
@@ -38,11 +38,11 @@ public class TagController : Controller
             return NotFound();
         }
 
-        return Ok(tagService.GetTagById(request.IdTypeTag));
+        return Ok(tagService.GetTagById(request.IdTag));
     }
 
     [HttpPost("AddTag")]
-    public IActionResult AddTag(AddTagRequest request)
+    public IActionResult AddTag([FromBody] AddTagRequest request)
     {
         TagService tagService;
         try
@@ -64,6 +64,29 @@ public class TagController : Controller
         return Ok(addedId);
     }
 
+    [HttpDelete("RemoveTag")]
+    public IActionResult RemoveTag([FromBody] IdTagRequest request)
+    {
+        TagService tagService;
+        try
+        {
+            tagService = new TagService();
+        }
+        catch
+        {
+            return NotFound();
+        }
+
+        var success = tagService.RemoveTag(request.IdTag);
+        if (!success)
+        {
+            return StatusCode(500);
+        }
+
+        tagService.WriteChanges();
+        return Ok();
+    }
+
     [HttpPost("ListTypeTags")]
     public IActionResult ListTypeTags()
     {
@@ -81,7 +104,7 @@ public class TagController : Controller
     }
 
     [HttpPost("GetTypeTagById")]
-    public IActionResult GetTypeTagById(IdTagRequest request)
+    public IActionResult GetTypeTagById([FromBody] IdTypeTagRequest request)
     {
         TagService tagService;
         try
@@ -97,7 +120,7 @@ public class TagController : Controller
     }
 
     [HttpPost("AddTypeTag")]
-    public IActionResult AddTypeTag(AddTypeTagRequest request)
+    public IActionResult AddTypeTag([FromBody] AddTypeTagRequest request)
     {
         TagService tagService;
         try
@@ -117,5 +140,28 @@ public class TagController : Controller
 
         tagService.WriteChanges();
         return Ok(addedId);
+    }
+
+    [HttpDelete("RemoveTypeTag")]
+    public IActionResult RemoveTypeTag([FromBody] IdTagRequest request)
+    {
+        TagService tagService;
+        try
+        {
+            tagService = new TagService();
+        }
+        catch
+        {
+            return NotFound();
+        }
+
+        var success = tagService.RemoveTypeTag(request.IdTag);
+        if (!success)
+        {
+            return StatusCode(500);
+        }
+
+        tagService.WriteChanges();
+        return Ok();
     }
 }
