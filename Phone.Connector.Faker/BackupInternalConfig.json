@@ -1,64 +1,37 @@
 {
   "tags": [
     {
-      "idTag": 1,
-      "name": "Tag 1",
-      "color": "#FF0000",
-      "typeTag": 10,
-      "valueTag": "Value 1"
+      "idTag": 6,
+      "name": "Text files",
+      "color": "#FFFFF",
+      "typeTag": 14,
+      "valueTag": ".txt"
     },
     {
-      "idTag": 2,
-      "name": "Tag 2",
-      "color": "#00FF00",
-      "typeTag": 11,
-      "valueTag": "Value 2"
+      "idTag": 7,
+      "name": "Doc",
+      "color": "#FFFFF",
+      "typeTag": 14,
+      "valueTag": ".doc"
     },
     {
-      "idTag": 3,
-      "name": "Tag 3",
-      "color": "#0000FF",
-      "typeTag": 12,
-      "valueTag": "Value 3"
-    },
-    {
-      "idTag": 4,
-      "name": "Tag 4",
-      "color": "#FFFF00",
-      "typeTag": 13,
-      "valueTag": "Value 4"
+      "idTag": 8,
+      "name": "unicesumar",
+      "color": "#00000",
+      "typeTag": 15,
+      "valueTag": "uni_"
     }
   ],
   "typeTags": [
-    {
-      "idTypeTag": 10,
-      "description": "Type 1"
-    },
-    {
-      "idTypeTag": 11,
-      "description": "Type 2"
-    },
-    {
-      "idTypeTag": 12,
-      "description": "Type 3"
-    },
-    {
-      "idTypeTag": 13,
-      "description": "Type 4"
-    }
+    { "idTypeTag": 14, "description": "Extention" },
+    { "idTypeTag": 15, "description": "Name" }
   ],
   "orderings": [
     {
       "idOrdering": 1,
-      "name": "Ordering 1",
-      "tags": [1, 3],
-      "directoryDestination": "/storage/emulated/0/Android/data"
-    },
-    {
-      "idOrdering": 2,
-      "name": "Ordering 2",
-      "tags": [2, 4],
-      "directoryDestination": "/storage/emulated/0/Download"
+      "name": "Text unicesumar",
+      "tags": [6, 8],
+      "directoryDestination": "/storage/emulated/0/Unicesumar/textos"
     }
   ]
 }

@@ -22,7 +22,7 @@ public class OrderingService
       return null;
     }
 
-    Ordering? foundOrdering = orderings.Find((tag) => tag.IdOrdering == id);
+    Ordering? foundOrdering = orderings.Find((ordering) => ordering.IdOrdering == id);
     return foundOrdering;
   }
 
@@ -64,10 +64,35 @@ public class OrderingService
     return InternalConfigSingle.internalConfigRead.Orderings.Remove(foundOrdering);
   }
 
-  public bool ExecuteOrdering(int IdOrdering, string targetDirectory)
+  public bool ExecuteOrdering(int IdOrdering, string targetDirectoryPath)
   {
+    var ordering = GetOrderingById(IdOrdering);
+    if (ordering == null)
+    {
+      return false;
+    }
+    DirectoryService directoryService = new DirectoryService(Constants.StoragePath);
+
+    List<Tag> orderingTags = [];
+    foreach (var tagId in ordering.TagIds)
+    {
+      TagService tagService = new TagService();
+      Tag? tag = tagService.GetTagById(tagId);
+      if (tag == null)
+      {
+        return false;
+      }
+      orderingTags.Add(tag);
+    }
+    if (!directoryService.MoveItemsOnDirectoryByTags(targetDirectoryPath, orderingTags, ordering.DirectoryDestination))
+    {
+      return false;
+    }
+    directoryService.WriteChanges();
     return true;
   }
+
+
 
   public bool WriteChanges()
   {

@@ -13,14 +13,14 @@ public class Ordering
 {
     [JsonPropertyName("idOrdering")] public int IdOrdering { get; set; }
     [JsonPropertyName("name")] public string Name { get; set; }
-    [JsonPropertyName("tags")] public List<int> Tags { get; set; }
+    [JsonPropertyName("tags")] public List<int> TagIds { get; set; }
     [JsonPropertyName("directoryDestination")] public string DirectoryDestination { get; set; }
 
-    public Ordering(int idOrdering, string name, List<int> tags, string directoryDestination)
+    public Ordering(int idOrdering, string name, List<int> tagIds, string directoryDestination)
     {
         IdOrdering = idOrdering;
         Name = name;
-        Tags = tags;
+        TagIds = tagIds;
         DirectoryDestination = directoryDestination;
     }
 }

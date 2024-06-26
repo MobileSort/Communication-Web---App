@@ -75,6 +75,37 @@
           "files": null
         }
       ]
+    },
+    {
+      "path": "/storage/emulated/0/MessyDirectory",
+      "type": "directory",
+      "size_bytes": 0,
+      "files": [
+        {
+          "path": "/storage/emulated/0/MessyDirectory/uni_text1.txt",
+          "type": "file",
+          "size_bytes": 0,
+          "files": []
+        },
+        {
+          "path": "/storage/emulated/0/MessyDirectory/uniNOT_someText.txt",
+          "type": "file",
+          "size_bytes": 0,
+          "files": []
+        },
+        {
+          "path": "/storage/emulated/0/MessyDirectory/uni_somePDF.pdf",
+          "type": "file",
+          "size_bytes": 0,
+          "files": []
+        },
+        {
+          "path": "/storage/emulated/0/MessyDirectory/uni_text2222.txt",
+          "type": "file",
+          "size_bytes": 0,
+          "files": []
+        }
+      ]
     }
   ]
 }
