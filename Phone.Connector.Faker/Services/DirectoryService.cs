@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Phone.Connector.Faker.Models.ViewModel;
 
 namespace Phone.Connector.Faker.Utils;
@@ -248,5 +249,26 @@ public class DirectoryService
         }
 
         return searchTarget;  
+    }
+
+    public List<DirectoryElement> SearchItem(string searchTerm, List<DirectoryElement> directories )
+    {
+        List<DirectoryElement> results = new List<DirectoryElement>();
+
+        foreach (var directory in directories)
+        {
+            if (directory.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+            {
+                results.Add(directory);
+            }
+
+            if (directory.Files != null)
+            {
+                results.AddRange(SearchItem(searchTerm, directory.Files));
+            }
+            
+        }
+
+        return results;
     }
 }

@@ -1,138 +1,157 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Phone.Connector.Faker.Models.View;
-using Phone.Connector.Faker.Models.ViewModel;
-using Phone.Connector.Faker.Utils;
+    using Microsoft.AspNetCore.Http.HttpResults;
+    using Microsoft.AspNetCore.Mvc;
+    using Phone.Connector.Faker.Models.View;
+    using Phone.Connector.Faker.Models.ViewModel;
+    using Phone.Connector.Faker.Utils;
 
-namespace Phone.Connector.Faker.Controllers;
+    namespace Phone.Connector.Faker.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class DirectoryController : Controller
-{
-    [HttpPost("ListDirectory")]
-    public IActionResult ListDirectory([FromBody] IdDirectoryRequest request)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DirectoryController : Controller
     {
-        DirectoryService directoryService;
-        try
+        [HttpPost("ListDirectory")]
+        public IActionResult ListDirectory([FromBody] IdDirectoryRequest request)
         {
-            directoryService = new DirectoryService(Constants.StoragePath);
-        }
-        catch
-        {
-            return NotFound();
+            DirectoryService directoryService;
+            try
+            {
+                directoryService = new DirectoryService(Constants.StoragePath);
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            if (request.path == "/")
+            {
+                return Ok(new DirectoryElement("/", "directory", 0, directoryService.readDirectory.Directories));
+            }
+
+            var foundElement = directoryService.SearchSubDirectory(directoryService.readDirectory.Directories, request.path);
+            if (foundElement == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(foundElement);
         }
 
-        if (request.path == "/")
+        [HttpPost("AddDirectory")]
+        public IActionResult AddDirectory([FromBody] IdDirectoryRequest request)
         {
-            return Ok(new DirectoryElement("/", "directory", 0, directoryService.readDirectory.Directories));
+            DirectoryService directoryService;
+            try
+            {
+                directoryService = new DirectoryService(Constants.StoragePath);
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            var dir = new DirectoryElement(
+                request.path,
+                "directory",
+                0,
+                []
+            );
+            var success = directoryService.AddDirectory(dir);
+            if (!success)
+            {
+                return StatusCode(500);
+            }
+
+            directoryService.WriteChanges();
+            return Ok();
         }
 
-        var foundElement = directoryService.SearchSubDirectory(directoryService.readDirectory.Directories, request.path);
-        if (foundElement == null)
+        [HttpPost("AddFile")]
+        public IActionResult AddFile([FromBody] AddFileRequest request)
         {
-            return NotFound();
+            DirectoryService directoryService;
+            try
+            {
+                directoryService = new DirectoryService(Constants.StoragePath);
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            var file = new DirectoryElement(request.Path, "file", request.SizeBytes, []);
+            var success = directoryService.AddFile(file);
+            if (!success)
+            {
+                return StatusCode(500);
+            }
+
+            directoryService.WriteChanges();
+            return Ok();
         }
 
-        return Ok(foundElement);
+        [HttpDelete("RemoveItem")]
+        public IActionResult RemoveItem([FromBody] IdDirectoryRequest request)
+        {
+            DirectoryService directoryService;
+            try
+            {
+                directoryService = new DirectoryService(Constants.StoragePath);
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            var success = directoryService.RemoveItem(request.path);
+            if (!success)
+            {
+                return StatusCode(500);
+            }
+
+            directoryService.WriteChanges();
+            return Ok();
+        }
+
+        [HttpPost("MoveItem")]
+        public IActionResult MoveItem([FromBody] MoveItemRequest request)
+        {
+            DirectoryService directoryService;
+            try
+            {
+                directoryService = new DirectoryService(Constants.StoragePath);
+            }
+            catch (Exception e)
+            {
+                return NotFound(e);
+            }
+
+            var success = directoryService.MoveItem(request.pathToMoveFrom, request.pathToMoveTo);
+            if (!success)
+            {
+                return StatusCode(500);
+            }
+
+            directoryService.WriteChanges();
+            return Ok();
+        }
+
+        [HttpPost("SearchItem")]
+        public IActionResult SearchItem([FromBody] SearchItemRequest request)
+        {
+            DirectoryService directoryService;
+            try
+            {
+                directoryService = new DirectoryService(Constants.StoragePath);
+            }
+            catch
+            {
+                return NotFound();
+            }
+
+            var searchResults =
+                directoryService.SearchItem(request.searchItem, directoryService.readDirectory.Directories);
+
+            return Ok(searchResults);
+        }
     }
-
-    [HttpPost("AddDirectory")]
-    public IActionResult AddDirectory([FromBody] IdDirectoryRequest request)
-    {
-        DirectoryService directoryService;
-        try
-        {
-            directoryService = new DirectoryService(Constants.StoragePath);
-        }
-        catch
-        {
-            return NotFound();
-        }
-
-        var dir = new DirectoryElement(
-            request.path,
-            "directory",
-            0,
-            []
-        );
-        var success = directoryService.AddDirectory(dir);
-        if (!success)
-        {
-            return StatusCode(500);
-        }
-
-        directoryService.WriteChanges();
-        return Ok();
-    }
-
-    [HttpPost("AddFile")]
-    public IActionResult AddFile([FromBody] AddFileRequest request)
-    {
-        DirectoryService directoryService;
-        try
-        {
-            directoryService = new DirectoryService(Constants.StoragePath);
-        }
-        catch
-        {
-            return NotFound();
-        }
-
-        var file = new DirectoryElement(request.Path, "file", request.SizeBytes, []);
-        var success = directoryService.AddFile(file);
-        if (!success)
-        {
-            return StatusCode(500);
-        }
-
-        directoryService.WriteChanges();
-        return Ok();
-    }
-
-    [HttpDelete("RemoveItem")]
-    public IActionResult RemoveItem([FromBody] IdDirectoryRequest request)
-    {
-        DirectoryService directoryService;
-        try
-        {
-            directoryService = new DirectoryService(Constants.StoragePath);
-        }
-        catch
-        {
-            return NotFound();
-        }
-
-        var success = directoryService.RemoveItem(request.path);
-        if (!success)
-        {
-            return StatusCode(500);
-        }
-
-        directoryService.WriteChanges();
-        return Ok();
-    }
-
-    [HttpPost("MoveItem")]
-    public IActionResult MoveItem([FromBody] MoveItemRequest request)
-    {
-        DirectoryService directoryService;
-        try
-        {
-            directoryService = new DirectoryService(Constants.StoragePath);
-        }
-        catch (Exception e)
-        {
-            return NotFound(e);
-        }
-
-        var success = directoryService.MoveItem(request.pathToMoveFrom, request.pathToMoveTo);
-        if (!success)
-        {
-            return StatusCode(500);
-        }
-
-        directoryService.WriteChanges();
-        return Ok();
-    }
-}
