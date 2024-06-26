@@ -27,6 +27,20 @@
       "color": "#FFFF00",
       "typeTag": 13,
       "valueTag": "Value 4"
+    },
+    {
+      "idTag": 5,
+      "name": "Text files",
+      "color": "#FFFFF",
+      "typeTag": 11,
+      "valueTag": ".txt"
+    },
+    {
+      "idTag": 6,
+      "name": "Text files",
+      "color": "#FFFFF",
+      "typeTag": 14,
+      "valueTag": ".txt"
     }
   ],
   "typeTags": [
@@ -45,18 +59,30 @@
     {
       "idTypeTag": 13,
       "description": "Type 4"
+    },
+    {
+      "idTypeTag": 14,
+      "description": "Extention"
     }
   ],
-  "ordering": [
+  "orderings": [
     {
       "idOrdering": 1,
       "name": "Ordering 1",
-      "tags": [1, 3]
+      "tags": [
+        1,
+        3
+      ],
+      "directoryDestination": "/storage/emulated/0/Android/data"
     },
     {
       "idOrdering": 2,
       "name": "Ordering 2",
-      "tags": [2, 4]
+      "tags": [
+        2,
+        4
+      ],
+      "directoryDestination": "/storage/emulated/0/Download"
     }
   ]
 }

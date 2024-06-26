@@ -29,4 +29,18 @@ public class OrderingController: Controller
         }
         return true;
     }
+
+    [HttpPost("")]
+    public IActionResult GetOrderings()
+    {
+        using StreamReader readerStorage = new(Constants.InternalConfigPath);
+        
+        string json = readerStorage.ReadToEnd();
+        if (json == null)
+        {
+            throw new Exception("Not Found");
+        }
+        
+        return Ok();
+    }
 }

@@ -47,16 +47,18 @@
       "description": "Type 4"
     }
   ],
-  "ordering": [
+  "orderings": [
     {
       "idOrdering": 1,
       "name": "Ordering 1",
-      "tags": [1, 3]
+      "tags": [1, 3],
+      "directoryDestination": "/storage/emulated/0/Android/data"
     },
     {
       "idOrdering": 2,
       "name": "Ordering 2",
-      "tags": [2, 4]
+      "tags": [2, 4],
+      "directoryDestination": "/storage/emulated/0/Download"
     }
   ]
 }

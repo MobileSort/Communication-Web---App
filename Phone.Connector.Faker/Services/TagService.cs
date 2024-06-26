@@ -5,63 +5,16 @@ namespace Phone.Connector.Faker.Utils;
 
 public class TagService
 {
-    public string internalConfigPath { get; set; }
-    public InternalConfig internalConfigRead { get; set; }
-
-    public TagService(string path)
+    public TagService()
     {
-        internalConfigPath = path;
-        using StreamReader r = new(internalConfigPath);
-
-        string json = r.ReadToEnd();
-        var foundConfig = JsonSerializer.Deserialize<InternalConfig>(json);
-        if (foundConfig == null)
-        {
-            throw new Exception("Not Found");
-        }
-
-        internalConfigRead = foundConfig;
     }
 
     public List<Tag> ListTags()
     {
-        return internalConfigRead.Tags;
+        InternalConfig config = InternalConfigSingle.internalConfigRead;
+        return config.Tags;
     }
-
-    public int? AddTag(string Name, string Color, int TypeTag,string ValueTag)
-    {
-        TypeTag? foundTagType = GetTagTypeByID(TypeTag);
-        if (foundTagType == null)
-        {
-            return null;
-        }
-
-        int lastId = 0;
-        foreach (var tag in internalConfigRead.Tags)
-        {
-            if (tag.IdTag > lastId)
-            {
-                lastId = tag.IdTag;
-            }
-        }
-
-        Tag tagToAdd = new(lastId+1, Name, Color, TypeTag, ValueTag);
-        internalConfigRead.Tags.Add(tagToAdd);
-        return tagToAdd.IdTag;
-    }
-
-    public List<TypeTag> ListTypeTags()
-    {
-        return internalConfigRead.TypeTags;
-    }
-
-    public bool AddTypeTag(TypeTag tagToAdd)
-    {
-        internalConfigRead.TypeTags.Add(tagToAdd);
-        return true;
-    }
-
-    public Tag? GetTagByID(int id)
+    public Tag? GetTagById(int id)
     {
         var tags = ListTags();
         if (tags.Count == 0)
@@ -69,11 +22,35 @@ public class TagService
             return null;
         }
 
-        Tag? foundTag = tags.Find((tag) => { return tag.IdTag == id; });
+        Tag? foundTag = tags.Find((tag) => tag.IdTag == id);
         return foundTag;
     }
+    public int? AddTag(string Name, string Color, int TypeTag, string ValueTag)
+    {
+        TypeTag? foundTagType = GetTypeTagById(TypeTag);
+        if (foundTagType == null)
+        {
+            return null;
+        }
 
-    public TypeTag? GetTagTypeByID(int id)
+        int lastId = 0;
+        foreach (var tag in InternalConfigSingle.internalConfigRead.Tags)
+        {
+            if (tag.IdTag > lastId)
+            {
+                lastId = tag.IdTag;
+            }
+        }
+
+        Tag tagToAdd = new(lastId + 1, Name, Color, TypeTag, ValueTag);
+        InternalConfigSingle.internalConfigRead.Tags.Add(tagToAdd);
+        return tagToAdd.IdTag;
+    }
+    public List<TypeTag> ListTypeTags()
+    {
+        return InternalConfigSingle.internalConfigRead.TypeTags;
+    }
+    public TypeTag? GetTypeTagById(int id)
     {
         var tags = ListTypeTags();
         if (tags.Count == 0)
@@ -81,22 +58,26 @@ public class TagService
             return null;
         }
 
-        TypeTag? foundTypeTag = tags.Find((tag) => { return tag.IdTypeTag == id; });
+        TypeTag? foundTypeTag = tags.Find((tag) => tag.IdTypeTag == id);
         return foundTypeTag;
     }
-    
+    public int? AddTypeTag(string description)
+    {
+        int lastId = 0;
+        foreach (var tag in InternalConfigSingle.internalConfigRead.TypeTags)
+        {
+            if (tag.IdTypeTag > lastId)
+            {
+                lastId = tag.IdTypeTag;
+            }
+        }
+
+        TypeTag tagToAdd = new(lastId + 1, description);
+        InternalConfigSingle.internalConfigRead.TypeTags.Add(tagToAdd);
+        return tagToAdd.IdTypeTag;
+    }
     public bool WriteChanges()
     {
-        try
-        {
-            var updatedStorage = JsonSerializer.Serialize<InternalConfig>(internalConfigRead);
-            using var streamWriter = new StreamWriter(internalConfigPath, false);
-            streamWriter.Write(updatedStorage);
-        }
-        catch
-        {
-            return false;
-        }
-        return true;
+        return InternalConfigSingle.WriteChanges();
     }
 }

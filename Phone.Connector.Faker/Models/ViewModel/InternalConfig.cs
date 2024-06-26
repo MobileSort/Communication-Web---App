@@ -6,7 +6,7 @@ public class InternalConfig
 {
     [JsonPropertyName("tags")] public List<Tag> Tags { get; set; }
     [JsonPropertyName("typeTags")] public List<TypeTag> TypeTags { get; set; }
-    [JsonPropertyName("ordering")] public List<Tag> Orderings { get; set; }
+    [JsonPropertyName("orderings")] public List<Ordering> Orderings { get; set; }
 }
 
 public class Ordering
@@ -14,6 +14,7 @@ public class Ordering
     [JsonPropertyName("idOrdering")] public int IdOrdering { get; set; }
     [JsonPropertyName("name")] public string Name { get; set; }
     [JsonPropertyName("tags")] public List<int> Tags { get; set; }
+    [JsonPropertyName("directoryDestination")] public string DirectoryDestination { get; set; }
 }
 
 public class Tag
