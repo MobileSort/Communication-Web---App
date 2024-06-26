@@ -9,94 +9,111 @@ namespace Phone.Connector.Faker.Controllers;
 [Route("api/[controller]")]
 public class OrderingController : Controller
 {
-    [HttpPost("RevertChanges")]
-    public bool RevertChages()
+  [HttpPost("RevertChanges")]
+  public bool RevertChages()
+  {
+    //throw this to the service of ordering
+    using StreamReader readerStorage = new(Constants.BackupStoragePath);
+
+    string json = readerStorage.ReadToEnd();
+    if (json == null)
     {
-        //throw this to the service of ordering
-        using StreamReader readerStorage = new(Constants.BackupStoragePath);
-
-        string json = readerStorage.ReadToEnd();
-        if (json == null)
-        {
-            throw new Exception("Not Found");
-        }
-
-        try
-        {
-            using var writerStorage = new StreamWriter(Constants.StoragePath, false);
-            writerStorage.Write(json);
-        }
-        catch
-        {
-            return false;
-        }
-
-        return true;
+      throw new Exception("Not Found");
     }
 
-    [HttpPost("ListOrderings")]
-    public IActionResult ListOrderings()
+    try
     {
-        OrderingService service = new();
-        return Ok(service.ListOrderings());
+      using var writerStorage = new StreamWriter(Constants.StoragePath, false);
+      writerStorage.Write(json);
+    }
+    catch
+    {
+      return false;
     }
 
-    [HttpPost("GetOrderingById")]
-    public IActionResult GetOrderingById([FromBody] IdOrderingRequest request)
+    return true;
+  }
+
+  [HttpPost("ListOrderings")]
+  public IActionResult ListOrderings()
+  {
+    OrderingService service = new();
+    return Ok(service.ListOrderings());
+  }
+
+  [HttpPost("GetOrderingById")]
+  public IActionResult GetOrderingById([FromBody] IdOrderingRequest request)
+  {
+    OrderingService service = new();
+    return Ok(service.GetOrderingById(request.IdOrdering));
+  }
+
+  [HttpPost("AddOrdering")]
+  public IActionResult AddOrdering([FromBody] AddOrderingRequest request)
+  {
+    OrderingService orderingService;
+    try
     {
-        OrderingService service = new();
-        return Ok(service.GetOrderingById(request.IdOrdering));
+      orderingService = new OrderingService();
+    }
+    catch
+    {
+      return NotFound();
     }
 
-    [HttpPost("AddOrdering")]
-    public IActionResult AddOrdering([FromBody] AddOrderingRequest request)
+    var addedId = orderingService.AddOrdering(request.Name, request.Tags, request.DirectoryDestination);
+    if (addedId == null)
     {
-        OrderingService orderingService;
-        try
-        {
-            orderingService = new OrderingService();
-        }
-        catch
-        {
-            return NotFound();
-        }
-
-        var addedId = orderingService.AddOrdering(request.Name, request.Tags, request.DirectoryDestination);
-        if (addedId == null)
-        {
-            return NotFound();
-        }
-
-        orderingService.WriteChanges();
-        return Ok(addedId);
+      return NotFound();
     }
 
-    [HttpDelete("RemoveOrdering")]
-    public IActionResult RemoveOrdering([FromBody] IdOrderingRequest request)
+    orderingService.WriteChanges();
+    return Ok(addedId);
+  }
+
+  [HttpDelete("RemoveOrdering")]
+  public IActionResult RemoveOrdering([FromBody] IdOrderingRequest request)
+  {
+    OrderingService orderingService;
+    try
     {
-        OrderingService orderingService;
-        try
-        {
-            orderingService = new OrderingService();
-        }
-        catch
-        {
-            return NotFound();
-        }
-
-        var success = orderingService.RemoveOrdering(request.IdOrdering);
-        if (!success)
-        {
-            return StatusCode(500);
-        }
-
-        orderingService.WriteChanges();
-        return Ok();
+      orderingService = new OrderingService();
+    }
+    catch
+    {
+      return NotFound();
     }
 
-    [HttpPost("ExecuteOrdering")]
-    public IActionResult ExecuteOrdering()
+    var success = orderingService.RemoveOrdering(request.IdOrdering);
+    if (!success)
     {
-        return StatusCode(501);
+      return StatusCode(500);
     }
+
+    orderingService.WriteChanges();
+    return Ok();
+  }
+
+  [HttpPost("ExecuteOrdering")]
+  public IActionResult ExecuteOrdering([FromBody] ExecuteOrderingRequest request)
+  {
+    OrderingService orderingService;
+    try
+    {
+      orderingService = new OrderingService();
+    }
+    catch
+    {
+      return NotFound();
+    }
+
+    var success = orderingService.ExecuteOrdering(request.IdOrdering, request.TargetDirectory);
+    if (!success)
+    {
+      return StatusCode(500);
+    }
+
+    orderingService.WriteChanges();
+    return Ok();
+  }
 }

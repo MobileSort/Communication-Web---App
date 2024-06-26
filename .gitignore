@@ -14,3 +14,5 @@ Phone.Connector.Faker/obj
 /dataSources.local.xml
 .idea
 Phone.Connector.Faker.sln.DotSettings.user
+.vs
+Phone.Connector.Faker.csproj.user
