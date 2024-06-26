@@ -15,6 +15,14 @@ public class Ordering
     [JsonPropertyName("name")] public string Name { get; set; }
     [JsonPropertyName("tags")] public List<int> Tags { get; set; }
     [JsonPropertyName("directoryDestination")] public string DirectoryDestination { get; set; }
+
+    public Ordering(int idOrdering, string name, List<int> tags, string directoryDestination)
+    {
+        IdOrdering = idOrdering;
+        Name = name;
+        Tags = tags;
+        DirectoryDestination = directoryDestination;
+    }
 }
 
 public class Tag
