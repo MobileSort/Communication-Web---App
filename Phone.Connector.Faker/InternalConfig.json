@@ -87,6 +87,15 @@
         4
       ],
       "directoryDestination": "/storage/emulated/0/Download"
+    },
+    {
+      "idOrdering": 3,
+      "name": "new ord",
+      "tags": [
+        1,
+        4
+      ],
+      "directoryDestination": "/storage/emulated/0/DCIM"
     }
   ]
 }
