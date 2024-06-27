@@ -69,6 +69,12 @@ public class DirectoryService
     {
       return true;
     }
+
+    if (!directoryToAdd.Path.Contains(readDirectory.Path))
+    {
+      directoryToAdd.Path = readDirectory.Path + directoryToAdd.Path;
+    }
+
     DirectoryElement? startDirectory = FindRootDirectory(directoryToAdd.Path);
 
     if (startDirectory == null)
@@ -89,6 +95,10 @@ public class DirectoryService
 
   public bool AddFile(DirectoryElement element)
   {
+    if (!element.Path.Contains(readDirectory.Path))
+    {
+      element.Path = readDirectory.Path + element.Path;
+    }
     var lastElement = element.Path.Split("/").Last();
     var lastDir = element.Path.Replace("/" + lastElement, "");
     DirectoryElement directoriesToAdd = new(lastDir, "directory", 0, []);
@@ -305,7 +315,7 @@ public class DirectoryService
           break;
         }
         var typeTag = tagService.GetTypeTagById(tag.TypeTag);
-        if(typeTag == null)
+        if (typeTag == null)
         {
           matches = false;
           continue;
