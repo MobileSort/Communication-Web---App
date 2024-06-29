@@ -1,0 +1,37 @@
+{
+  "tags": [
+    {
+      "idTag": 6,
+      "name": "Text files",
+      "color": "#FFFFF",
+      "typeTag": 14,
+      "valueTag": ".txt"
+    },
+    {
+      "idTag": 7,
+      "name": "Doc",
+      "color": "#FFFFF",
+      "typeTag": 14,
+      "valueTag": ".doc"
+    },
+    {
+      "idTag": 8,
+      "name": "unicesumar",
+      "color": "#00000",
+      "typeTag": 15,
+      "valueTag": "uni_"
+    }
+  ],
+  "typeTags": [
+    { "idTypeTag": 14, "description": "Extention" },
+    { "idTypeTag": 15, "description": "Name" }
+  ],
+  "orderings": [
+    {
+      "idOrdering": 1,
+      "name": "Text unicesumar",
+      "tags": [6, 8],
+      "directoryDestination": "/storage/emulated/0/Unicesumar/textos"
+    }
+  ]
+}
